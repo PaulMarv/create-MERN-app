@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Avatar, Button, Grid, Typography, Container, Paper} from '@mui/material';
-import { GoogleLogin } from '@react-oauth/google';
+import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
 import {useDispatch} from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import jwt_decode from "jwt-decode";
@@ -39,76 +39,109 @@ const Auth = () => {
         setIsSignup((prevIsSignUp) => !prevIsSignUp)
     }
 
-    const googleSuccess = async (credentialResponse) =>{
-        const result = jwt_decode(credentialResponse?.credential) ;
-        const token = credentialResponse?.credential;
-        
-        try {
-            dispatch({type: 'AUTH', data:{result, token}})
-            navigate("/", { replace: true });
+    const loginWithGoogle = useGoogleLogin({
+      onSuccess: async (tokenResponse) => {
+        const result = jwt_decode(tokenResponse?.credential);
+        const token = tokenResponse?.credential;
 
+        try {
+          dispatch({ type: "AUTH", data: { result, token } });
+          navigate("/", { replace: true });
         } catch (error) {
-            console.log(error)
+          console.log(error);
         }
-      
-    }
-    const googleError = (error) =>{
-        console.log(error)
-    }
+      },
+      onError: (errorResponse) => {
+        console.log(errorResponse);
+      },
+    });
+
     
   return (
-   <Container component="main" maxWidth="xs">
-    <Paper className={classes.paper} elevation={3}>
+    <Container component="main" maxWidth="xs">
+      <Paper className={classes.paper} elevation={3}>
         <Avatar className={classes.avatar}>
-            <LockOutlinedIcon/>
+          <LockOutlinedIcon />
         </Avatar>
-        <Typography varaiant='h5'> {isSignUp ? 'Sign Up':'Sign In'} </Typography>
+        <Typography varaiant="h5">
+          {" "}
+          {isSignUp ? "Sign Up" : "Sign In"}{" "}
+        </Typography>
         <form className={classes.form} onSubmit={handleSubmit}>
-            <Grid container spacing={2}>
-                {
-                    isSignUp &&(
-                        <>
-                            <Input name='firstName' label="First Name" handleChange={handleChange} autoFocus half/>
-                            <Input name='lastName' label="Last Name" handleChange={handleChange} half/>
-                        </>
-                    )
-                }
-                <Input name='email' label="Email Address" handleChange={handleChange} type='email'/>
-                <Input name='password' label='Password' handleChange={handleChange} type={showPassword?'text' : 'password'} handleShowPassword={handleShowPassword}/>
-                {isSignUp && <Input name='confirmPassword' label='Repeat Password' handleChange={handleChange} type='password'/>}
-            </Grid>
-            <Button type='submit' fullWidth variant="contained" color='primary' className={classes.submit}>
-                {isSignUp ? 'Sign Up' :  'Sign In'}
-            </Button>
-            <GoogleLogin
-                render ={(renderProps) => (
-                    <Button
-                      className={classes.googleButton}
-                      color="primary"
-                      fullWidth
-                      onClick={renderProps.onClick}
-                      disabled={renderProps.disabled}
-                      startIcon={<Icon/>}
-                      variant="contained"
-                    >
-                      Google Sign In
-                    </Button>
-                )}
-                onSuccess={googleSuccess}
-                onError={googleError}
-                state_cookie_domain="single_host_origin"
+          <Grid container spacing={2}>
+            {isSignUp && (
+              <>
+                <Input
+                  name="firstName"
+                  label="First Name"
+                  handleChange={handleChange}
+                  autoFocus
+                  half
+                />
+                <Input
+                  name="lastName"
+                  label="Last Name"
+                  handleChange={handleChange}
+                  half
+                />
+              </>
+            )}
+            <Input
+              name="email"
+              label="Email Address"
+              handleChange={handleChange}
+              type="email"
             />
-            <Grid container justify= "flex-end">
-                <Grid item>
-                    <Button onClick={switchMode}>
-                        {isSignUp? 'Already have an account' : "Don't have an account? Sign Up"}
-                    </Button>
-                </Grid>
+            <Input
+              name="password"
+              label="Password"
+              handleChange={handleChange}
+              type={showPassword ? "text" : "password"}
+              handleShowPassword={handleShowPassword}
+            />
+            {isSignUp && (
+              <Input
+                name="confirmPassword"
+                label="Repeat Password"
+                handleChange={handleChange}
+                type="password"
+              />
+            )}
+          </Grid>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+          >
+            {isSignUp ? "Sign Up" : "Sign In"}
+          </Button>
+
+          <Button
+            className={classes.googleButton}
+            color="primary"
+            fullWidth
+            startIcon={<Icon />}
+            variant="contained"
+            onClick={() => loginWithGoogle()}
+          >
+            Google Sign In
+          </Button>
+
+          <Grid container justify="flex-end">
+            <Grid item>
+              <Button onClick={switchMode}>
+                {isSignUp
+                  ? "Already have an account"
+                  : "Don't have an account? Sign Up"}
+              </Button>
             </Grid>
+          </Grid>
         </form>
-    </Paper>
-   </Container>
-  )
+      </Paper>
+    </Container>
+  );
 }
 
 export default Auth
