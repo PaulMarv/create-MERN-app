@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import { useDispatch } from "react-redux";
 import {Container, Grow, Grid, Paper, AppBar, TextField, InputAdornment, Button} from '@mui/material';
 import { useLocation, useNavigate } from "react-router-dom";
-import { getPosts } from "../../actions/posts";
+import { getPosts, getPostsBySearch } from "../../actions/posts";
 import Chip from '@mui/material/Chip';
 import Posts from '../Posts/Posts';
 import Form from '../Form/Form';
@@ -30,20 +30,29 @@ const Home = () => {
         dispatch(getPosts());
     }, [currentId, dispatch])
     
+    const searchPost = () =>{
+      if (search.trim() || tagsArray){
+    
+        dispatch(getPostsBySearch({search, tags: tagsArray.join(',')}))
+        
+        navigate(`/posts/search?searchQuery=${search || 'none'}&tags=${tagsArray.join(',')}`);
+      } else{
+        navigate('/')
+      }
+    }
     const handleKeyPress = (e) =>{
       if (e.keyCode === 13){
-        //SEARCH POST
+        searchPost();
       }
     }
     const [tagsArray, setTagsArray] = useState([]);
 
     const handleAdd = (e) => {
       if (e.key === 'Enter'){
-        setTagsArray([...tagsArray, tags])
-        console.log(tagsArray)
+        setTagsArray([...tagsArray, tags]);
+        setTags('');
       }
     }
-
     const handleDelete = (tagToDelete) => setTagsArray(tagsArray.filter((tag) => tag !== tagToDelete))
 
   return (
@@ -78,15 +87,17 @@ const Home = () => {
               <TextField
                 style={{ margin: "10px 0" }}
                 label="Search Tags"
+                variant="outlined"
+                fullWidth
                 onKeyPress={handleAdd}
                 value={tags}
                 onChange={(e) => setTags(e.target.value)}
                 InputProps={{
-                  endAdornment: (
-                    <InputAdornment position='end'>
+                  startAdornment: (
+                    <InputAdornment position='start'>
                       {tagsArray?.map((tag) => (
                         <Chip
-                          key={Math.random() * 500}
+                          key={tagsArray.length + 1}
                           label={tag}
                           onDelete={handleDelete}
                         />
@@ -95,6 +106,7 @@ const Home = () => {
                   ),
                 }}
               />
+              <Button onClick={searchPost} className={classes.searchButton} variant='contained' color='primary'>Search</Button>
             </AppBar>
             <Form currentId={currentId} setCurrentId={setCurrentId} />
             <Paper elevation={6}>
