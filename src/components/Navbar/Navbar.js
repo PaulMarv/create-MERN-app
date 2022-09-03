@@ -4,7 +4,8 @@ import { useDispatch } from 'react-redux';
 import decode from 'jwt-decode';
 import {Typography,AppBar, Toolbar, Avatar, Button} from '@mui/material';
 import useStyles from './styles';
-import memories from '../../images/memories.png';
+import memoriesLogo from '../../images/memories-Logo.png';
+import memoriesText from '../../images/memories-Text.png';
 
 export const Navbar = () => {
     const classes = useStyles();
@@ -32,19 +33,10 @@ export const Navbar = () => {
 
   return (
     <AppBar className={classes.appBar} position="static" color="inherit">
-      <div className={classes.brandContainer}>
-        <Link className={classes.heading} to="/">
-            <Typography  variant="h2" align="center">
-                Memories
-            </Typography>
+        <Link className={classes.brandContainer} to="/">
+          <img src={memoriesText} alt="icon" height="40px" />
+          <img className={classes.image} src={memoriesLogo} alt="icon" height="40px" />
         </Link>
-        <img
-          className={classes.image}
-          src={memories}
-          alt="memories"
-          height="60"
-        />
-      </div>
       <Toolbar className={classes.toolbar}>
         {
             user?(

@@ -26,9 +26,6 @@ const Home = () => {
     const searchQuery = query.get('searchQuery');
 
 
-    useEffect(()=>{
-        dispatch(getPosts());
-    }, [currentId, dispatch])
     
     const searchPost = () =>{
       if (search.trim() || tagsArray){
@@ -61,7 +58,7 @@ const Home = () => {
         <Grid
           className={classes.gridContainer}
           container
-          justify="space-between"
+          justify="space-between"o
           alignItems="stretch"
           spacing={3}
         >
@@ -110,7 +107,7 @@ const Home = () => {
             </AppBar>
             <Form currentId={currentId} setCurrentId={setCurrentId} />
             <Paper elevation={6}>
-              <Paginate />
+              <Paginate page={page} />
             </Paper>
           </Grid>
         </Grid>
