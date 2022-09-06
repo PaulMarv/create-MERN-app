@@ -91,7 +91,7 @@ const Home = () => {
                 onChange={(e) => setTags(e.target.value)}
                 InputProps={{
                   startAdornment: (
-                    <InputAdornment position='start'>
+                    <InputAdornment position="start">
                       {tagsArray?.map((tag) => (
                         <Chip
                           key={tagsArray.length + 1}
@@ -103,12 +103,21 @@ const Home = () => {
                   ),
                 }}
               />
-              <Button onClick={searchPost} className={classes.searchButton} variant='contained' color='primary'>Search</Button>
+              <Button
+                onClick={searchPost}
+                className={classes.searchButton}
+                variant="contained"
+                color="primary"
+              >
+                Search
+              </Button>
             </AppBar>
             <Form currentId={currentId} setCurrentId={setCurrentId} />
-            <Paper elevation={6}>
-              <Paginate page={page} />
-            </Paper>
+            {!searchQuery && !tags.length && (
+              <Paper elevation={6} className = {classes.pagination}>
+                <Paginate page={page} />
+              </Paper>
+            )}
           </Grid>
         </Grid>
       </Container>
