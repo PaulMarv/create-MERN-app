@@ -1,7 +1,8 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { deletePost, likePost } from '../../../actions/posts';
-import {Card, CardActions, CardContent, CardMedia, Button, Typography} from '@mui/material';
+import {Card, CardActions, CardContent, CardMedia, Button, Typography, ButtonBase} from '@mui/material';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import ThumbUpAltOutlined from '@mui/icons-material/ThumbUpAltOutlined';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -14,6 +15,7 @@ const Post = ({post, setCurrentId})=>{
     const classes = useStyles();
     const dispatch = useDispatch();
     const user = JSON.parse(localStorage.getItem('profile'));
+    const navigate = useNavigate();
 
     const Likes = () => {
         if (post.likes.length > 0) {
@@ -27,9 +29,13 @@ const Post = ({post, setCurrentId})=>{
     
         return <><ThumbUpAltOutlined fontSize="small" />&nbsp;Like</>;
       };
+      const openPost = () => {
+        navigate(`/posts/${post._id}`)
+      }
     
     return (
       <Card className={classes.card} raised elevation = {6}>
+        <ButtonBase className={classes.cardActions} onClick={openPost}>
         <CardMedia
           className={classes.media}
           image={post.selectedFiles}
@@ -65,6 +71,7 @@ const Post = ({post, setCurrentId})=>{
             {post.message}
           </Typography>
         </CardContent>
+        </ButtonBase>
         <CardActions>
           <Button
             size="small"
