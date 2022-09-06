@@ -46,7 +46,7 @@ export const Navbar = () => {
                     <Button variant='contained' className={classes.logout} color="secondary" onClick = {logout}>Logout</Button>
                 </div>
             ):(
-                <Link className={classes.signButton} to ='/auth'>
+                <Link className={classes.signButton} to ='/auth' style={{textDecoration:'none'}}>
                     <Button variant='contained' color='primary'>Sign In</Button>
                 </Link>
             )

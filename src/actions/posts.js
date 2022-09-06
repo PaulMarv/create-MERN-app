@@ -6,6 +6,7 @@ import * as api from '../api/index'
      try {
          const {data} = await api.fetchPosts(page)
          const action = {type:FETCH_ALL, payload:data}
+         console.log(data)
          dispatch(action)
     } catch (error) {
         console.log(error.message)
