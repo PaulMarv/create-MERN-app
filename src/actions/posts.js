@@ -1,4 +1,4 @@
-import { FETCH_ALL, FETCH_BY_SEARCH, START_LOADING, END_LOADING, CREATE, UPDATE, DELETE } from '../constansts/actionTypes'
+import { FETCH_ALL, FETCH_POST, FETCH_BY_SEARCH, START_LOADING, END_LOADING, CREATE, UPDATE, DELETE } from '../constansts/actionTypes'
 import * as api from '../api/index';
 
 
@@ -14,6 +14,18 @@ import * as api from '../api/index';
         console.log(error.message)
     }
 
+}
+
+export const getPost = (id) => async (dispatch) =>{
+    try {
+        dispatch({type: START_LOADING})
+        const {data} = await api.fetchPost(id)
+        const action = {type:FETCH_POST, payload:data}
+        dispatch(action)
+        dispatch({type: END_LOADING})
+   } catch (error) {
+       console.log(error.message)
+   }
 }
 
 export const getPostsBySearch = (searchQuery) =>async (dispatch) => {
