@@ -82,15 +82,15 @@ const Home = () => {
               />
 
               <TextField
-                style={{ margin: "10px 0" }}
                 label="Search Tags"
+                style={{ margin: "10px 0" }}
                 variant="outlined"
                 fullWidth
                 onKeyPress={handleAdd}
                 value={tags}
                 onChange={(e) => setTags(e.target.value)}
                 InputProps={{
-                  startAdornment: (
+                  endAdornment: (
                     <InputAdornment position="start">
                       {tagsArray?.map((tag) => (
                         <Chip
