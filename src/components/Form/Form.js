@@ -2,15 +2,17 @@ import React, {useState, useEffect} from 'react';
 import { useDispatch, useSelector} from 'react-redux';
 import { TextField, Button, Typography, Paper } from '@mui/material';
 import { createPost, updatePost } from '../../actions/posts.js';
+import { useNavigate } from 'react-router-dom';
 import useStyles from './styles.js'
 import FileBase from 'react-file-base64';
 
 const Form = ({currentId, setCurrentId})=>{
     const [postData, setPostData] = useState({title:'', message:'', tags:'', selectedFiles:''})
-    const post = useSelector((state)=> currentId ? state.posts.find((p) => p._id === currentId) : null)
+    const post = useSelector((state)=> currentId ? state.posts.posts.find((p) => p._id === currentId) : null)
     const classes = useStyles();
     const dispatch = useDispatch();
     const user = JSON.parse(localStorage.getItem('profile'));
+    const navigate = useNavigate()
 
     useEffect(()=>{
         if(post)setPostData(post)
@@ -19,10 +21,11 @@ const Form = ({currentId, setCurrentId})=>{
     const handleSubmit = (e)=>{
         e.preventDefault();
 
-        if(currentId){
+        if(currentId === 0){
             dispatch(updatePost(currentId, {...postData, name: user?.result?.name}))
+            // navigate('/posts/')
         }else{
-            dispatch(createPost({...postData, name: user?.result?.name}))
+            dispatch(createPost({...postData, name: user?.result?.name}, navigate))
         }
         clear()
     }
