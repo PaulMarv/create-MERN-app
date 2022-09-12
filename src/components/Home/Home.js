@@ -50,7 +50,9 @@ const Home = () => {
         setTags('');
       }
     }
-    const handleDelete = (tagToDelete) => setTagsArray(tagsArray.filter((tag) => tag !== tagToDelete))
+    const handleDelete = (index) => {
+      // setTagsArray(tagsArray.filter((tag) => tag !== index))
+    }
 
   return (
     <Grow in>
@@ -92,11 +94,11 @@ const Home = () => {
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="start">
-                      {tagsArray?.map((tag) => (
+                      {tagsArray?.map((tag, index) => (
                         <Chip
                           key={tagsArray.length + 1}
                           label={tag}
-                          onDelete={handleDelete}
+                          onDelete={(index)=>handleDelete(index)}
                         />
                       ))}
                     </InputAdornment>
