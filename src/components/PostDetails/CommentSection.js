@@ -6,14 +6,21 @@ import useStyles from './styles';
 
 const CommentSection = ({post}) => {
     const classes =useStyles();
-    const [comments, setComments] = useState([1,2,3,4]);
+    const [comments, setComments] = useState(post?.comments);
     const [comment, setComment] = useState('');
-    const user = JSON.parse((localStorage).getItem('user'));
-    const dispatch = useDispatch()
+    const user = JSON.parse((localStorage).getItem('profile'));
+    const dispatch = useDispatch();
+    const commentRef = useRef();
 
-    const handleClick = ()=> {
-        const finalComment = `${user.result.name}: ${comment}`
-        dispatch(commentPost(finalComment, post._id))
+    const handleClick = async()=> {
+        const finalComment = `${user.result.name}: ${comment}`;
+
+        const newComments = await dispatch(commentPost(finalComment, post._id))
+
+        setComments(newComments)
+        setComment('');
+
+        commentRef.current.scrollIntoView({behaviour: 'smooth'})
     }
 
   return (
@@ -22,10 +29,13 @@ const CommentSection = ({post}) => {
             <Typography gutterBottom variant='h6'>Comments</Typography>
             {comments.map((c, i) => (
                 <Typography key ={i} gutterBottom variant ='subtitle1'>
-                    Comment {i}
+                    <strong>{c.split(': ')[0]}</strong> 
+                    {c.split(':')[1]}
                 </Typography>
             ))}
+            <div ref={commentRef}></div>
         </div>
+        {user?.result?.name && (
         <div style={{width: '70%'}}>
             <Typography gutterBottom variant='h6'>Write a comment</Typography>
             <TextField
@@ -41,6 +51,7 @@ const CommentSection = ({post}) => {
                 Comment
             </Button>
         </div>
+        )}
     </div>
   )
 }

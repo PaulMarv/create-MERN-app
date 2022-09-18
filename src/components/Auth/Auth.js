@@ -40,20 +40,22 @@ const Auth = () => {
     }
 
     const loginWithGoogle = useGoogleLogin({
-      onSuccess: async (tokenResponse) => {
+      onSuccess: (tokenResponse) => {
         const result = jwt_decode(tokenResponse?.credential);
         const token = tokenResponse?.credential;
-
+        console.log( result)
         try {
           dispatch({ type: "AUTH", data: { result, token } });
           navigate("/", { replace: true });
         } catch (error) {
           console.log(error);
+       
         }
       },
       onError: (errorResponse) => {
         console.log(errorResponse);
       },
+      flow: 'auth-code'
     });
 
     

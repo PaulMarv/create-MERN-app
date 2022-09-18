@@ -21,9 +21,10 @@ const useStyles = makeStyles({
       section: {
         borderRadius: '20px',
         margin: '10px',
-        flex: 1,
+        flex: 2,
       },
       imageSection: {
+        flex: 1,
         marginLeft: '20px',
         [theme.breakpoints.down('sm')]: {
           marginLeft: 0,
