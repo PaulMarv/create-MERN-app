@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Avatar, Button, Grid, Typography, Container, Paper} from '@mui/material';
-import {  useGoogleLogin } from '@react-oauth/google';
+import {  useGoogleLogin, GoogleLogin } from '@react-oauth/google';
 import {useDispatch} from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import jwt_decode from "jwt-decode";
@@ -39,24 +39,21 @@ const Auth = () => {
         setIsSignup((prevIsSignUp) => !prevIsSignUp)
     }
 
-    const loginWithGoogle = useGoogleLogin({
-      onSuccess: (tokenResponse) => {
-        const result = jwt_decode(tokenResponse?.credential);
-        const token = tokenResponse?.credential;
-        console.log( result)
-        try {
-          dispatch({ type: "AUTH", data: { result, token } });
-          navigate("/", { replace: true });
-        } catch (error) {
-          console.log(error);
-       
-        }
-      },
-      onError: (errorResponse) => {
-        console.log(errorResponse);
-      },
-      flow: 'auth-code'
-    });
+    const googleSuccess = async (tokenResponse) => {
+      const result = jwt_decode(tokenResponse?.credential);
+      const token = tokenResponse?.credential;
+  
+      try {
+        dispatch({ type: 'AUTH', data: { result, token } });
+  
+        navigate('/');
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  
+    const googleError = () => console.log('Google Sign In was unsuccessful. Try again later');
+  
 
     
   return (
@@ -120,16 +117,16 @@ const Auth = () => {
             {isSignUp ? "Sign Up" : "Sign In"}
           </Button>
 
-          <Button
-            className={classes.googleButton}
-            color="primary"
-            fullWidth
-            startIcon={<Icon />}
-            variant="contained"
-            onClick={() => loginWithGoogle()}
-          >
-            Google Sign In
-          </Button>
+      
+          <GoogleLogin
+            Render={(renderProps) => (
+              <Button className={classes.googleButton} color="primary" fullWidth onClick={renderProps.onClick} disabled={renderProps.disabled} startIcon={<Icon />} variant="contained">
+                Google Sign In
+              </Button>
+            )}
+            onSuccess={googleSuccess}
+            onFailure={googleError}
+          />
 
           <Grid container justify="flex-end">
             <Grid item>
