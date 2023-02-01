@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API = axios.create({ baseURL: 'http://localhost:5000'});
+const API = axios.create({ baseURL: 'https://keep-it-here.herokuapp.com/'});
 
 // CHECK WETHER A USER IS ALREADY LOGGED IN
 API.interceptors.request.use((req) => {
